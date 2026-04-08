@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const webHookLogsSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     ticket_id: String,
     event_type: {
         type: String,

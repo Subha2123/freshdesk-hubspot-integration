@@ -115,14 +115,14 @@ export const getTicketConversations = async (req, res) => {
         description: data.description,
         created_at: data.created_at,
         subject: data.subject,
-        requester_id:data.requester_id,
-        requester_name:data.requester.name,
-        requester_email:data.requester.email
+        requester_id: data.requester_id,
+        requester_name: data.requester.name,
+        requester_email: data.requester.email
       },
       conversations: [{
         body_text: data.description,
         created_at: data.created_at,
-        conversation_type:"received"
+        conversation_type: "received"
       }, ...data.conversations && data.conversations.map(item => {
         return {
           body_text: item.body_text,
@@ -145,17 +145,17 @@ export const getTicketConversations = async (req, res) => {
 };
 
 
-export const triggerTicket=async(req,res)=>{
- try {
+export const triggerTicket = async (req, res) => {
+  try {
     const payload = req.body;
     const timestamp = new Date(payload.created_at || Date.now());
-
-    await webHookLogs.insert({
+    const newLog = new webHookLogs({
       ticket_id: payload.ticket_id,
       event_type: payload.event_type || "ticket_event",
       timestamp,
       payload: JSON.stringify(payload),
     });
+    await newLog.save();
 
     res.status(200).send("Webhook received");
   } catch (error) {
