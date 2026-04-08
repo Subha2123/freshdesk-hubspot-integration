@@ -1,4 +1,5 @@
 import ExternalConnection from "../model/connection.js";
+import webHookLogs from "../model/webhookLogs.js";
 
 
 export const connectFreshDesk = async (req, res) => {
@@ -145,20 +146,20 @@ export const getTicketConversations = async (req, res) => {
 
 
 export const triggerTicket=async(req,res)=>{
-  try {
-    console.log("Webhook received:", req.body);
+ try {
+    const payload = req.body;
+    const timestamp = new Date(payload.created_at || Date.now());
 
-  // TODO: Save payload to database
-  // Example:
-  // db.insert('webhook_logs', {
-  //   timestamp: new Date(),
-  //   event_type: req.body.event_type || 'unknown',
-  //   payload: req.body
-  // });
+    await webHookLogs.insert({
+      ticket_id: payload.ticket_id,
+      event_type: payload.event_type || "ticket_event",
+      timestamp,
+      payload: JSON.stringify(payload),
+    });
 
-  res.status(200).send("Webhook received");
+    res.status(200).send("Webhook received");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error fetching conversations" });
+    res.status(500).send("Error processing webhook");
   }
 }
