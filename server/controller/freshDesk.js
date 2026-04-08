@@ -147,11 +147,12 @@ export const getTicketConversations = async (req, res) => {
 
 export const triggerTicket = async (req, res) => {
   try {
+    const event_type=req.query?.type || ""
     const payload = req.body;
     const timestamp = new Date(payload.created_at || Date.now());
     const newLog = new webHookLogs({
       ticket_id: payload.ticket_id,
-      event_type: payload.event_type || "ticket_event",
+      event_type: event_type || "ticket_event",
       timestamp,
       payload: JSON.stringify(payload),
     });

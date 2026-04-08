@@ -30,14 +30,15 @@ app.use('/api',webhookapi)
 const serverPort=process.env.port || 8001
 
 function startServer(){
-
+  try {
     connectDB()
-
     app.listen(serverPort,()=>{
         console.log("Server is Listening on the port",serverPort)
     })
-
-
+  } catch (error) {
+    console.error("Error while starting server",error.message)
+  }
+    
 }
 
 startServer()
