@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
 import User from '../model/user.js'
 import { configDotenv } from 'dotenv';
+import ExternalConnection from '../model/connection.js';
 
 configDotenv()
 
@@ -14,8 +15,8 @@ export const signupUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    if(!name || !email || !password){
-    return res.status(404).json({ error: 'User details Name ,Email, Password required' });
+    if (!name || !email || !password) {
+      return res.status(404).json({ error: 'User details Name ,Email, Password required' });
     }
 
     const existingUser = await User.findOne({ email });
@@ -50,6 +51,11 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // true in production
+      sameSite: "lax",
+    })
     res.status(200).json({
       message: 'Login successful',
       token,
@@ -89,7 +95,11 @@ export const googleSignIn = async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
-
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false, // true in production
+      sameSite: "lax",
+    })
     res.status(200).json({
       message: 'Google sign-in successful',
       token,
@@ -100,3 +110,18 @@ export const googleSignIn = async (req, res) => {
     res.status(500).json({ error: 'Failed to sign in with Google' });
   }
 };
+
+
+export const getUserData=async(req,res)=>{
+   try {
+    const user = await User.findById(req.user.userId).select("-password");
+    if (!user) return res.status(404).json({ error: "User not found" });
+    const connections=await ExternalConnection.findOne({
+      userId:user.id
+    }).select('freshdesk')
+    res.json({ user , connections });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+}

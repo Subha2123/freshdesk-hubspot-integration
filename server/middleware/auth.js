@@ -5,9 +5,11 @@ dotenv.config()
 
 export const authMiddleware = (req, res, next) => {
   try {
-    const token = req.headers.authorization
+    const token = req.cookies.token
     if (!token) {
-      return res.redirect('/api/auth/signin')
+      return res.status(401).json({
+        message:"Invalid Token"
+      })
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -18,6 +20,8 @@ export const authMiddleware = (req, res, next) => {
     console.log(
         "Error while validate token",error.message
     );
-    res.redirect('/api/auth/signin')
+    res.status(500).json({
+      message:error.message || "Error while validate token"
+    })
   }
 };

@@ -6,7 +6,7 @@ import { connectHubSpot,hubspotCallback } from '../controller/hubSpot.js';
 
 const router=express.Router()
 
-router.get('/freshdesk',authMiddleware,connectFreshDesk)
+router.post('/freshdesk',authMiddleware,connectFreshDesk)
 router.get('/tickets',authMiddleware,fetchTickets)
 router.get('/tickets/conversations/:ticketId', authMiddleware, getTicketConversations);
 
