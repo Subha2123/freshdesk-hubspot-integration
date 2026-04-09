@@ -19,10 +19,14 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173","http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com/"],
+    origin: [
+      "http://localhost:5173",
+      "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
+    ],
     credentials: true,
   })
 );
+
 app.use('/api/auth',auth)
 app.use('/api/connect',connection)
 app.use('/api',webhookapi)
