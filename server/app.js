@@ -17,15 +17,30 @@ app.use(express.json())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser());
+
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
-    ],
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+app.options("*", cors());
 
 app.use('/api/auth',auth)
 app.use('/api/connect',connection)

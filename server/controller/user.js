@@ -53,9 +53,9 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // true in production
-      sameSite: "lax",
-    })
+      secure: true,
+      sameSite: "none",
+    });
     res.status(200).json({
       message: 'Login successful',
       token,
@@ -97,9 +97,10 @@ export const googleSignIn = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // true in production
-      sameSite: "lax",
-    })
+      secure: true,
+      sameSite: "none",
+    });
+
     res.status(200).json({
       message: 'Google sign-in successful',
       token,
@@ -112,14 +113,14 @@ export const googleSignIn = async (req, res) => {
 };
 
 
-export const getUserData=async(req,res)=>{
-   try {
+export const getUserData = async (req, res) => {
+  try {
     const user = await User.findById(req.user.userId).select("-password");
     if (!user) return res.status(404).json({ error: "User not found" });
-    const connections=await ExternalConnection.findOne({
-      userId:user.id
+    const connections = await ExternalConnection.findOne({
+      userId: user.id
     }).select('freshdesk')
-    res.json({ user , connections });
+    res.json({ user, connections });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
