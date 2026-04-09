@@ -2,7 +2,6 @@ import express from 'express'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 
 import { connectDB } from './config/dbConfig.js'
 import auth from './routes/user.js'
@@ -13,21 +12,32 @@ dotenv.config()
 
 const app=express()
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
-];
+// const allowedOrigins = [
+//   "http://localhost:5173",
+//   "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
+// ];
 
 
 app.use(cors({
-  origin: true,
+  origin: function (origin, callback) {
+    console.log("Incoming origin:", origin);
+
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.log("Blocked by CORS:", origin);
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
 }));
+
 
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookieParser());
 
 
 app.use('/api/auth',auth)
