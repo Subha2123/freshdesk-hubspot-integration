@@ -13,12 +13,6 @@ dotenv.config()
 
 const app=express()
 
-app.use(express.json())
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookieParser());
-
-
 const allowedOrigins = [
   "http://localhost:5173",
   "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
@@ -28,16 +22,12 @@ app.use(cors({
   origin: allowedOrigins,
   credentials: true,
 }));
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200); //
-  }
-  next();
-});
+app.options(/.*/, cors());
+app.use(express.json())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser());
+
 
 app.use('/api/auth',auth)
 app.use('/api/connect',connection)
