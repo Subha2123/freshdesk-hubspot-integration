@@ -21,7 +21,9 @@ export default function Login() {
       const res = await googleLogin(tokenId)
       if (res?.token) {
         setUser(res.user); 
+        localStorage.setItem("token", res.token);
         navigate("/dashboard")
+        
       } else {
         alert("Invalid credentials");
       }
@@ -40,8 +42,8 @@ export default function Login() {
     const res = await signinUser(form)
     if (res?.token) {
       setUser(res.user);
+      localStorage.setItem("token", res.token);
       navigate("/dashboard")
-
     } else {
       alert("Invalid credentials");
     }

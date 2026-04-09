@@ -54,7 +54,7 @@ export const getCurrentUser = async () => {
 
 export const logoutUser = async () => {
   try {
-    return await apiRequest("/logout", {
+    return await apiRequest("auth/logout", {
       method: "POST",
     });
   } catch (error) {
