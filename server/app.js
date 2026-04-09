@@ -18,11 +18,12 @@ const allowedOrigins = [
   "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
 ];
 
+
 app.use(cors({
-  origin: allowedOrigins,
+  origin: true,
   credentials: true,
 }));
-app.options(/.*/, cors());
+
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -33,7 +34,7 @@ app.use('/api/auth',auth)
 app.use('/api/connect',connection)
 app.use('/api',webhookapi)
 
-const serverPort=process.env.port || 8000
+const serverPort=process.env.PORT || 8000
 
 function startServer(){
   try {
