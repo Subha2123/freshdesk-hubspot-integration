@@ -12,10 +12,10 @@ dotenv.config()
 
 const app=express()
 
-// const allowedOrigins = [
-//   "http://localhost:5173",
-//   "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
-// ];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
+];
 
 
 app.use(cors({
