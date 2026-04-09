@@ -24,7 +24,7 @@ export const connectFreshDesk = async (req, res) => {
     }
     connection.freshdesk = { domain, apiKey };
     await connection.save();
-    res.json({ message: 'Freshdesk connected successfully!' });
+    res.json({ message: 'Freshdesk connected successfully!' , connection:connection.freshdesk});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error connecting Freshdesk' });
@@ -166,4 +166,35 @@ export const triggerTicket = async (req, res) => {
     console.error(error);
     res.status(500).send("Error processing webhook");
   }
+}
+
+export const getWebHookLogs=async(req,res)=>{
+ try {
+     const logs = await webHookLogs.find({})
+      .sort({ createdAt: -1 })
+     console.log("🚀 ~ getWebHookLogs ~ logs:", logs)
+     const formattedLogs = logs.map((log) => {
+      let parsedPayload = {};
+
+      try {
+        parsedPayload = log.payload ? JSON.parse(log.payload) : {};
+      } catch (err) {
+        console.error("Payload parse error:", err);
+      }
+
+      return {
+        _id: log._id,
+        ticket_id: log.ticket_id,
+        event_type: log.event_type,
+        createdAt: log.createdAt,
+        updatedAt: log.updatedAt,
+        ...parsedPayload,
+      };
+    });
+
+    res.status(200).send(formattedLogs);
+ } catch (error) {
+   console.error(error);
+    res.status(500).send("Error fetching logs webhook");
+ }
 }

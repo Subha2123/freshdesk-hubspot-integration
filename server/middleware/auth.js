@@ -17,7 +17,7 @@ export const authMiddleware = (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(
+    console.error(
         "Error while validate token",error.message
     );
     res.status(500).json({
