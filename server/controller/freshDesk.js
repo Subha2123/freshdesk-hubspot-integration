@@ -148,7 +148,9 @@ export const getTicketConversations = async (req, res) => {
 export const triggerTicket = async (req, res) => {
   try {
     const event_type=req.query?.type || ""
+    console.log("🚀 ~ triggerTicket ~ event_type:", event_type)
     const payload = req.body;
+    console.log("🚀 ~ triggerTicket ~ payload:", payload)
     const timestamp = new Date(payload.created_at || Date.now());
     const newLog = new webHookLogs({
       ticket_id: payload.ticket_id,
@@ -158,7 +160,10 @@ export const triggerTicket = async (req, res) => {
     });
     await newLog.save();
 
-    res.status(200).send("Webhook received");
+    res.status(200).json({
+      message:"Webhook received",
+      data:webHookLogs
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error processing webhook");
