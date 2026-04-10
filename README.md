@@ -208,7 +208,8 @@ Database:
 ---
 
 ## API documentation
-API docs For Freshdesk & Hubspot Integratio.postman_collection.json
+API docs For Freshdesk & Hubspot Integration
+https://github.com/Subha2123/freshdesk-hubspot-integration/blob/51705c8af3e35d433621e43eae9ce92430cec01b/API%20docs%20For%20Freshdesk%20%26%20Hubspot%20Integratio.postman_collection.json
 
 
 ## Deployment Notes
