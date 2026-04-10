@@ -47,7 +47,7 @@ HUBSPOT_REDIRECT_URI=http://localhost:8000/api/connect/hubspot/callback
 FRESHDESK_DOMAIN=your_domain.freshdesk.com
 FRESHDESK_API_KEY=your_freshdesk_api_key
 
-# Auth (if applicable)
+# Auth
 JWT_SECRET=your_jwt_secret
 ```
 
