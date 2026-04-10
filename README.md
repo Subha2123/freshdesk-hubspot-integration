@@ -9,9 +9,55 @@ Find the live APP - http://amzn-s3-external-portal.s3-website-us-east-1.amazonaw
   "password": "subha123"
 }
 ```
+---
 
+## Setup Instructions
+
+### 1. Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd freshdesk-hubspot-integration
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+Create a `.env` file in the root directory using the sample below.
+---
+
+## API Credentials Setup (.env.sample)
+```env
+# Server
+PORT=8000
+
+# Base URL
+BASE_URL=http://localhost:8000
+
+# HubSpot OAuth
+HUBSPOT_CLIENT_ID=your_client_id
+HUBSPOT_CLIENT_SECRET=your_client_secret
+HUBSPOT_REDIRECT_URI=http://localhost:8000/api/connect/hubspot/callback
+
+# Freshdesk
+FRESHDESK_DOMAIN=your_domain.freshdesk.com
+FRESHDESK_API_KEY=your_freshdesk_api_key
+
+# Auth (if applicable)
+JWT_SECRET=your_jwt_secret
+```
 
 ---
+
+### 4. Run the server
+```bash
+npm run dev
+```
+
 
 ## Authentication Flow
 
