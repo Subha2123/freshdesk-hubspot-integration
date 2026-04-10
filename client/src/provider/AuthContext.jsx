@@ -1,5 +1,5 @@
 import {  useState, useEffect , createContext } from "react";
-import { getCurrentUser, logoutUser } from "../api/auth";
+import { getCurrentUser } from "../api/auth";
 
 
 export const AuthContext = createContext();
@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
     const fetchUser = async () => {
       try {
         const res=await getCurrentUser()
@@ -27,16 +26,18 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       }
     };
+
+  useEffect(() => {
     fetchUser();
   }, []);
 
   const logout = async () => {
-    await logoutUser()
+    localStorage.removeItem('token')
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, externalConnections, setExternalConnections, loading }}>
+    <AuthContext.Provider value={{ user, setUser, logout, externalConnections, setExternalConnections, loading , refreshUser: fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

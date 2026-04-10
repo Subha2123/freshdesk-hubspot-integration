@@ -6,8 +6,10 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import Dashboard from "./pages/dashboard/Dashboard";
 import { AuthProvider } from "./provider/AuthContext";
 import PrivateRoute from "./provider/PrivateRoute";
-import ConnectFreshdesk from "./pages/fetchdesk/connectFreshDesk";
+import ConnectFreshdesk from "./pages/fetchdesk/ConnectFreshDesk";
 import WebhookLogs from "./pages/webhook/WebHookLogs";
+import RootRedirect from "./provider/Redirect";
+import CRMPanel from "./components/CRMPanel";
 
 function App() {
 
@@ -16,8 +18,9 @@ function App() {
       <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<RootRedirect />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
           {/* Protected Routes */}
           <Route
@@ -58,7 +61,12 @@ function App() {
                 <WebhookLogs />
             }
           />
-          
+          <Route
+            path="/view/crm"
+            element={
+                <CRMPanel />
+            }
+          />  
         </Routes>
       </BrowserRouter>
       </AuthProvider>

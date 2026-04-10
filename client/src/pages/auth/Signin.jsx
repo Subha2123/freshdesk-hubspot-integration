@@ -4,6 +4,7 @@ import FormLayout from "../../components/FormLayout";
 import { GoogleLogin } from '@react-oauth/google';
 import { googleLogin, signinUser } from "../../api/auth";
 import { useAuth } from "../../customHooks/useAuth";
+import PasswordInput from "../../components/PasswordInput";
 
 
 export default function Login() {
@@ -63,7 +64,7 @@ export default function Login() {
       </p>
       <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6 mt-4" action="#">
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900 ">Email</label>
+          <label className="block mb-2 text-sm font-medium text-gray-900 ">Email <span className="text-red-  500">*</span></label>
           <input
             type="email"
             name="email"
@@ -73,15 +74,7 @@ export default function Login() {
           />
         </div>
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-900">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="••••••••"
-            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required=""
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
+          <PasswordInput form={form} setForm={setForm} />
         </div>
         <button
           type="submit"

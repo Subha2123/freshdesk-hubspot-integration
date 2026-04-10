@@ -1,4 +1,5 @@
 import { logoutUser } from "../../api/auth";
+import { connectHubSpot } from "../../api/freshdesk";
 import { useAuth } from "../../customHooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -8,12 +9,25 @@ export default function Dashboard() {
   const freshdeskConnected = externalConnections?.freshdesk?.apiKey;
   const hubspotConnected = externalConnections?.hubspot?.accessToken;
 
+
+
  async function handleLogout(){
-  try {
+  try { 1
     await logoutUser()
     navigate("/login")
   } catch (error) {
     console.error("Error while Logout",error.message)
+  }
+ }
+
+
+ async function handleConnectHubspot(e){
+  e.preventDefault()
+  try {
+    const res=await connectHubSpot()
+    window.location.href = res.authUrl;
+  } catch (error) {
+    console.error("Error while connect hubspot",error.message)
   }
  }
 
@@ -52,6 +66,7 @@ export default function Dashboard() {
                   }}
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-center"
                 >
+                  Connect FreshDesk
                 </button>
               )}
             </div>
@@ -75,7 +90,8 @@ export default function Dashboard() {
               </p>
               {!hubspotConnected && (
                 <a
-                  href="/connect/freshdesk"
+                  href="http://localhost:8000/api/connect/hubspot"
+                  onClick={handleConnectHubspot}
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-center"
                 >
                   Connect Hubspot
@@ -99,7 +115,7 @@ export default function Dashboard() {
             >
               View Tickets
             </button>
-            <button
+            <a
               disabled={!freshdeskConnected}
               onClick={() => {
                 navigate('/freshdesk/logs')
@@ -108,13 +124,16 @@ export default function Dashboard() {
                 }`}
             >
              Show Webhook Logs
-            </button>
+            </a>
           </div>
            <div className="flex items-center justify-center">
             <button
               disabled={!hubspotConnected}
               className={`bg-purple-500 cursor-pointer hover:bg-purple-600 text-white min-w-sm px-4 py-2 rounded ${!hubspotConnected ? "opacity-50 cursor-not-allowed" : ""
                 }`}
+              onClick={()=>{
+                navigate('/view/crm')
+              }}
             >
               View CRM Info
             </button>

@@ -43,3 +43,34 @@ export const fetchWebHookLogs = async () => {
     return { success: false, data: [] };
   }
 };
+
+
+export const connectHubSpot = async () => {
+  try {
+    return await apiRequest("/connect/hubspot");
+  } catch (error) {
+    console.error("Connect HubSpot Error:", error.message);
+    return { success: false, data: [] };
+  }
+};
+
+
+export const getContactsCRM = async (email) => {
+  try {
+    return await apiRequest(`/connect/hubspot/contacts?email=${email}`);
+  } catch (error) {
+    console.error("Connect HubSpot Error:", error.message);
+    return { success: false, data: [] };
+  }
+};
+
+
+export const getHubspotConnectMetaData = async () => {
+  try {
+    return await apiRequest(`/connect/hubspot/metadata`);
+  } catch (error) {
+    console.error("Connect HubSpot Error:", error.message);
+    return { success: false, data: [] };
+  }
+};
+

@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { fetchWebHookLogs } from "../../api/freshdesk";
+import TitleBackNaviagtion from "../../components/GoBack";
 
 
 export default function WebhookLogs() {
@@ -17,7 +18,7 @@ export default function WebhookLogs() {
 
     return (
         <div className="p-4 bg-gray-50 min-h-screen">
-            <h3 className="text-2xl font-bold mb-4">Webhook Logs</h3>
+            <TitleBackNaviagtion label="Dashboard" current="Webhook Logs" />
             <div className="overflow-x-auto shadow-lg rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200 overflow-y-auto">
                     <thead className="bg-gray-100">
