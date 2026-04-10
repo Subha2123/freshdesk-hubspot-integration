@@ -24,7 +24,7 @@ export const connectFreshDesk = async (req, res) => {
     }
     connection.freshdesk = { domain, apiKey };
     await connection.save();
-    res.json({ message: 'Freshdesk connected successfully!' , connection:connection.freshdesk});
+    res.json({ message: 'Freshdesk connected successfully!', connection: connection.freshdesk });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error connecting Freshdesk' });
@@ -65,7 +65,7 @@ export const fetchTickets = async (req, res) => {
         priority: item?.priority || '',
         status: item?.status || '',
         created_at: item?.created_at || '',
-        due_by: item?.due_by || ''
+        due_by: item?.due_by || '',
       }
     })
 
@@ -100,6 +100,7 @@ export const getTicketConversations = async (req, res) => {
     );
 
 
+
     if (!response.ok) {
       return res.status(response.status).json({ message: "Failed to fetch conversations" });
     }
@@ -112,30 +113,42 @@ export const getTicketConversations = async (req, res) => {
         type: data.type,
         due_by: data.due_by,
         is_escalated: data.is_escalated,
-        description: data.description,
+        description: data.description_text,
         created_at: data.created_at,
         subject: data.subject,
         requester_id: data.requester_id,
-        requester_name: data.requester.name,
-        requester_email: data.requester.email
+        requester_name: data.requester?.name,
+        requester_email: data.requester?.email,
+        tags: data?.tags || [],
       },
-      conversations: [{
-        body_text: data.description,
-        created_at: data.created_at,
-        conversation_type: "received"
-      }, ...data.conversations && data.conversations.map(item => {
-        return {
-          body_text: item.body_text,
-          created_at: item.created_at,
-          incoming: item.incoming,
-          private: item.private,
-          user_id: item.user_id,
-          ticket_id: item.ticket_id,
-          created_at: item.created_at,
-          conversation_type: item.user_id === data?.requester_id ? "received" : "sent"
-        }
-      })]
-    }
+
+      conversations: [
+        // initial ticket description as first message
+        {
+          body_text: data.description_text,
+          created_at: data.created_at,
+          conversation_type: "customer_reply",
+        },
+
+        // real conversations
+        ...(data.conversations?.map((item) => {
+          let type = "agent_reply";
+
+          if (item.private) type = "note";
+          else if (item.incoming) type = "customer_reply";
+
+          return {
+            body_text: item.body_text,
+            created_at: item.created_at,
+            incoming: item.incoming,
+            private: item.private,
+            user_id: item.user_id,
+            ticket_id: item.ticket_id,
+            conversation_type: type,
+          };
+        }) || []),
+      ],
+    };
 
     res.status(200).json(formattedData);
   } catch (error) {
@@ -148,7 +161,6 @@ export const getTicketConversations = async (req, res) => {
 export const triggerTicket = async (req, res) => {
   try {
     const payload = req.body;
-    console.log("🚀 ~ triggerTicket ~ payload:", payload)
     const timestamp = new Date(payload.created_at || Date.now());
     const newLog = new webHookLogs({
       ticket_id: payload.ticket_id,
@@ -159,8 +171,8 @@ export const triggerTicket = async (req, res) => {
     await newLog.save();
 
     res.status(200).json({
-      message:"Webhook received",
-      data:webHookLogs
+      message: "Webhook received",
+      data: webHookLogs
     });
   } catch (error) {
     console.error(error);
@@ -168,12 +180,11 @@ export const triggerTicket = async (req, res) => {
   }
 }
 
-export const getWebHookLogs=async(req,res)=>{
- try {
-     const logs = await webHookLogs.find({})
+export const getWebHookLogs = async (req, res) => {
+  try {
+    const logs = await webHookLogs.find({})
       .sort({ createdAt: -1 })
-     console.log("🚀 ~ getWebHookLogs ~ logs:", logs)
-     const formattedLogs = logs.map((log) => {
+    const formattedLogs = logs.map((log) => {
       let parsedPayload = {};
 
       try {
@@ -193,8 +204,8 @@ export const getWebHookLogs=async(req,res)=>{
     });
 
     res.status(200).send(formattedLogs);
- } catch (error) {
-   console.error(error);
+  } catch (error) {
+    console.error(error);
     res.status(500).send("Error fetching logs webhook");
- }
+  }
 }

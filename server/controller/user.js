@@ -109,7 +109,7 @@ export const getUserData = async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
     const connections = await ExternalConnection.findOne({
       userId: user.id
-    }).select('freshdesk')
+    }).select(['freshdesk','hubspot'] )
     res.json({ user, connections });
   } catch (err) {
     console.error(err);
@@ -120,12 +120,6 @@ export const getUserData = async (req, res) => {
 
 export const logoutUser = (req, res) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
-
     res.status(200).json({
       success: true,
       message: "Logged out successfully",

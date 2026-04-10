@@ -14,13 +14,13 @@ const app=express()
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com"
+  "http://amzn-s3-external-portal.s3-website-us-east-1.amazonaws.com",
+  "https://app.hubspot.com/oauth"
 ];
 
 
 app.use(cors({
   origin: function (origin, callback) {
-    console.log("Incoming origin:", origin);
 
     if (!origin) return callback(null, true);
 
