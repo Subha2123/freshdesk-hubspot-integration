@@ -55,7 +55,6 @@ export default function TicketDetails() {
 
   const getCRMContactService = async (email) => {
     try {
-
       setCRMLoading(true)
       const res = await getContactsCRM(email)
       setContactCRM(res);
@@ -69,9 +68,7 @@ export default function TicketDetails() {
 
   if (!tickets) {
   return (
-    <div className="h-screen flex items-center justify-center">
       <PageLoader />
-    </div>
   );
 }
 

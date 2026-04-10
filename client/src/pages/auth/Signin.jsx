@@ -9,7 +9,7 @@ import PasswordInput from "../../components/PasswordInput";
 
 export default function Login() {
   const navigate = useNavigate()
-  const { setUser } = useAuth();
+  const { setUser ,refreshUser } = useAuth();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -23,8 +23,8 @@ export default function Login() {
       if (res?.token) {
         setUser(res.user); 
         localStorage.setItem("token", res.token);
-        navigate("/dashboard")
-        
+        refreshUser()
+        navigate("/dashboard")  
       } else {
         alert("Invalid credentials");
       }
@@ -44,6 +44,7 @@ export default function Login() {
     if (res?.token) {
       setUser(res.user);
       localStorage.setItem("token", res.token);
+      refreshUser()
       navigate("/dashboard")
     } else {
       alert("Invalid credentials");

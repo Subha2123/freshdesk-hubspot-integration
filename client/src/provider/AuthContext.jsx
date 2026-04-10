@@ -10,22 +10,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
     const fetchUser = async () => {
-      try {
-        const res=await getCurrentUser()
-        if (res.user && res.connections) {
-          setUser(res.user);
-          setExternalConnections(res?.connections);
-        } else {
-          setUser(null);
-          setExternalConnections(null)
-        }
-      } catch (err) {
-        setUser(null);
-        console.error("get user data",err)
-      } finally {
-        setLoading(false);
-      }
-    };
+  setLoading(true);
+  try {
+    const res = await getCurrentUser();
+    if (res.user && res.connections) {
+      setUser(res.user);
+      setExternalConnections(res.connections);
+    } else {
+      setUser(null);
+      setExternalConnections(null);
+    }
+  } catch (err) {
+    setUser(null);
+    setExternalConnections(null);
+    console.error("get user data", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchUser();

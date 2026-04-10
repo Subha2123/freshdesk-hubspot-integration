@@ -1,7 +1,7 @@
 
 const PageLoader = () => {
   return (
-    <div>
+    <div className="h-screen flex items-center justify-center">
       <div className="text-center">
         <div role="status">
           <svg
@@ -20,7 +20,7 @@ const PageLoader = () => {
               fill="currentFill"
             />
           </svg>
-          <span className="sr-only">Loading...</span>
+          <span className="ml-2">Fetching Details...</span>
         </div>
       </div>
     </div>

@@ -2,12 +2,12 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { fetchWebHookLogs } from "../../api/freshdesk";
 import TitleBackNaviagtion from "../../components/GoBack";
+import PageLoader from "../../components/PageLoader";
 
 
 export default function WebhookLogs() {
 
     const [webhookLogs, setWebHookLogs] = useState([])
-
     async function fetchLogs() {
         await fetchWebHookLogs().then(setWebHookLogs)
     }
@@ -16,6 +16,14 @@ export default function WebhookLogs() {
         fetchLogs()
     }, [])
 
+    if (!webhookLogs.length) {
+        return (
+                <PageLoader />
+   
+        );
+    }
+
+    
     return (
         <div className="p-4 bg-gray-50 min-h-screen">
             <TitleBackNaviagtion label="Dashboard" current="Webhook Logs" />
